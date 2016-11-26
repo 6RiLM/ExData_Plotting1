@@ -13,6 +13,7 @@
 #
 # Load libraries
 #
+library(data.table)
 library(dplyr)
 library(lubridate)
 
@@ -20,7 +21,7 @@ library(lubridate)
 # Load and set the data into a tidy dataset
 #
 # Load the file and set ? as NA
-data <- tbl_df(read.csv("./data/household_power_consumption.txt", sep = ";", na.strings = "?")) %>%
+data <- tbl_df(fread("./data/household_power_consumption.txt", na.strings = "?")) %>%
     # Create timestamp from Date & Time into lubridate format
     mutate(datetime = dmy_hms(paste(Date, Time))) %>%
     # Keep data coming from 2007, 01 & 02 february
@@ -33,10 +34,10 @@ data <- tbl_df(read.csv("./data/household_power_consumption.txt", sep = ";", na.
 #
 # Plot histogramm of features Global_active_power in a PNG file
 #
+# Open window on screen 
+x11()
 # Change locale settints to write time series in english
 Sys.setlocale(category = "LC_ALL", locale = "en_GB.UTF-8")
-# Initialize out file with its extension & dimensions
-png("plot3.png", width = 480, height = 480)
 # Intialize the plot on graphic device
 with(data, plot(datetime, Sub_metering_1, type = "l", xlab = "",
                 ylab = "Energy sub metering"))
@@ -48,5 +49,7 @@ legend("topright", lty = 1, col = c("black", "red", "blue"),
        legend = names(data)[6:8])
 # Back to french
 Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8")
+# Copy the graph to a PNG file
+dev.copy(png, filename = "plot3.png", width = 480, height = 480)
 # Close the graphic device in order to save the file created
 dev.off()

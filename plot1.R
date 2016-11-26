@@ -13,6 +13,7 @@
 #
 # Load libraries
 #
+library(data.table)
 library(dplyr)
 library(lubridate)
 
@@ -20,7 +21,7 @@ library(lubridate)
 # Load and set the data into a tidy dataset
 #
 # Load the file and set ? as NA
-data <- tbl_df(read.csv("./data/household_power_consumption.txt", sep = ";", na.strings = "?")) %>%
+data <- tbl_df(fread("./data/household_power_consumption.txt", na.strings = "?")) %>%
     # Create timestamp from Date & Time into lubridate format
     mutate(datetime = dmy_hms(paste(Date, Time))) %>%
     # Keep data coming from 2007, 01 & 02 february
@@ -33,10 +34,12 @@ data <- tbl_df(read.csv("./data/household_power_consumption.txt", sep = ";", na.
 #
 # Plot histogramm of features Global_active_power in a PNG file
 #
-# Initialize out file with its extension & dimensions
-png("plot1.png", width = 480, height = 480)
+# Open window on screen 
+x11()
 # Intialize the plot on graphic device
 hist(data$Global_active_power, main = "Global Active Power", 
      xlab = "Global Active Power (kilowatts)", col = "red")
+# Copy the graph to a PNG file
+dev.copy(png, filename = "plot1.png", width = 480, height = 480)
 # Close the graphic device in order to save the file created
 dev.off()
