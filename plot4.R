@@ -21,7 +21,6 @@ library(lubridate)
 # Load and set the data into a tidy dataset
 #
 # Load the file and set ? as NA
-#data <- tbl_df(read.csv("./data/household_power_consumption.txt", sep = ";", na.strings = "?")) %>%
 data <- tbl_df(fread("./data/household_power_consumption.txt", na.strings = "?")) %>%
     # Create timestamp from Date & Time into lubridate format
     mutate(datetime = dmy_hms(paste(Date, Time))) %>%
